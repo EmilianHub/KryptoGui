@@ -1,8 +1,6 @@
 package com.example.kryptogui;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Scanner;
 
 public class CustomBase64 {
     public static String encode(String plainText) {

@@ -6,7 +6,6 @@ import org.javatuples.Triplet;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class FileReader {
@@ -19,7 +18,7 @@ public class FileReader {
             }
             myReader.close();
         } catch (Exception e) {
-            throw new RuntimeException("Couldn't read key");
+            throw new RuntimeException("Couldn't read file");
         }
         return result.toString();
     }
@@ -48,7 +47,7 @@ public class FileReader {
 
     public static void saveKeyToFile(String key) {
         try {
-            File file = new File("key");
+            File file = new File("key.txt");
             if (!file.exists()) file.createNewFile();
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
             bufferedWriter.write(key);
@@ -60,7 +59,7 @@ public class FileReader {
 
     public static void saveEncryptedTextString(String encryptedText) {
         try {
-            File file = new File("message");
+            File file = new File("message.txt");
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -76,7 +75,7 @@ public class FileReader {
 
     public static void saveEncryptedText(Character[][] encryptedText) {
         try {
-            File file = new File("message");
+            File file = new File("message.txt");
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -94,4 +93,19 @@ public class FileReader {
         }
     }
 
+    public static void saveBytesToFile(byte[] bytes) {
+        try {
+            File file = new File("image.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            for (byte pByte: bytes) {
+                bufferedWriter.write(pByte);
+            }
+            bufferedWriter.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

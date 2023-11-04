@@ -5,12 +5,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -20,15 +22,18 @@ public class HelloController {
             decryptTextInput, keyText,
             encryptedText, decryptedText,
             encryptFileTextInput, decryptedFileText,
-            encryptedFileText,
-            keyFileText, decryptFileTextInput;
+            encryptedFileText, keyFileText, decryptFileTextInput,
+            generateHamming, checkIntegral, toImageText, toBytesText;
 
     @FXML
-    protected ComboBox<String> menuEncryptType, menuFileEncryptType;
+    protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox;
     HashMap<String, String> stringStringHashMap = new HashMap<>();
     File selectedKey;
     File selectedPlainMessage;
     File selectedEncryptedMessage;
+    File toBytesImage;
+    File toImageBytes;
+    ImageView imageView;
     FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
@@ -47,6 +52,9 @@ public class HelloController {
                         "All Files",
                         "*.*"));
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home") + "/desktop"));
+
+        ObservableList<String> extensionTypes = FXCollections.observableArrayList("jpg", "png");
+        extensionBox.setItems(extensionTypes);
     }
 
     @FXML
@@ -160,4 +168,50 @@ public class HelloController {
         }
         decryptedFileText.setText(decryptText);
     }
+
+    @FXML
+    protected void onToBytes() {
+        toBytesImage = fileChooser.showOpenDialog(new Stage());
+        String filePath = Objects.nonNull(toBytesImage) ? toBytesImage.getPath() : "";
+        toBytesText.setText(filePath);
+    }
+
+    @FXML
+    protected void onToBytesButton() throws IOException {
+        FilesConverter.convertToByte(toBytesImage, onExtensionBox());
+    }
+
+    @FXML
+    protected void onToImage() {
+        toImageBytes = fileChooser.showOpenDialog(new Stage());
+        String filePath = Objects.nonNull(toImageBytes) ? toImageBytes.getPath() : "";
+        toImageText.setText(filePath);
+    }
+
+    @FXML
+    protected void onRollbackButton() throws IOException {
+        FilesConverter.convertBackward(toImageBytes, onExtensionBox());
+    }
+
+    @FXML
+    protected String onExtensionBox() {
+        return extensionBox.getValue();
+    }
+
+    @FXML
+    protected void onGenerateHamming() {
+
+    }
+
+    @FXML
+    protected void onCheckIntegral() {
+
+    }
+
+    @FXML
+    protected void onGenerateButton() {}
+
+    @FXML
+    protected void onCheckButton() {}
+
 }

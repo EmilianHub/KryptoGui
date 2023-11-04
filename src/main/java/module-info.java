@@ -6,6 +6,7 @@ module com.example.kryptogui {
             requires com.dlsc.formsfx;
                     requires org.kordamp.bootstrapfx.core;
     requires javatuples;
+    requires java.desktop;
 
     opens com.example.kryptogui to javafx.fxml;
     exports com.example.kryptogui;
