@@ -2,90 +2,221 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="795.0" prefWidth="640.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.rsa.RSAEncryptionDecryption">
+<VBox alignment="CENTER" prefHeight="795.0" prefWidth="640.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kryptogui.HelloController">
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
   <TabPane prefHeight="872.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
     <tabs>
-      <Tab text="Message">
+      <Tab text="Tekst">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0">
             <children>
-              <HBox prefHeight="436.0" prefWidth="600.0" />
+              <HBox alignment="TOP_RIGHT" prefHeight="132.0" prefWidth="600.0" AnchorPane.bottomAnchor="557.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <children>
+                           <VBox alignment="TOP_CENTER" prefHeight="436.0" prefWidth="220.0">
+                              <children>
+                                 <Label text="Typ szyfrowania tesktu">
+                                    <font>
+                                       <Font size="18.0" />
+                                    </font>
+                                    <padding>
+                                       <Insets bottom="10.0" />
+                                    </padding>
+                                 </Label>
+                                 <ComboBox fx:id="menuEncryptType" onAction="#onTypeMenu" prefWidth="150.0" />
+                              </children>
+                              <padding>
+                                 <Insets bottom="20.0" left="10.0" right="10.0" top="30.0" />
+                              </padding>
+                           </VBox>
+                           <VBox alignment="TOP_CENTER" prefHeight="251.0" prefWidth="391.0">
+                              <children>
+                                 <Label alignment="CENTER" contentDisplay="CENTER" text="Wporwadź tekst" textAlignment="CENTER">
+                                    <font>
+                                       <Font size="18.0" />
+                                    </font>
+                                    <VBox.margin>
+                                       <Insets />
+                                    </VBox.margin>
+                                 </Label>
+                                 <TextField fx:id="encryptTextInput" prefHeight="40.0" prefWidth="381.0" />
+                              </children>
+                              <padding>
+                                 <Insets bottom="20.0" left="10.0" right="10.0" top="30.0" />
+                              </padding>
+                           </VBox>
+                        </children></HBox>
+                     <Button fx:id="encryptButton" layoutX="249.0" layoutY="132.0" mnemonicParsing="false" onAction="#onEncryptButton" prefHeight="30.0" prefWidth="103.0" text="Szyfruj">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Button>
+                     <TextField fx:id="encryptedText" editable="false" layoutX="114.0" layoutY="216.0" prefHeight="40.0" prefWidth="381.0" />
+                     <Label layoutX="225.0" layoutY="189.0" text="Zaszyfrowany tekst">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                        <padding>
+                           <Insets bottom="10.0" />
+                        </padding>
+                     </Label>
+                     <HBox layoutX="1.0" layoutY="336.0" prefHeight="110.0" prefWidth="600.0">
+                        <children>
+                           <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="121.0" prefWidth="219.0">
+                              <children>
+                                 <Label text="Wybierz klucz">
+                                    <font>
+                                       <Font size="18.0" />
+                                    </font>
+                                    <padding>
+                                       <Insets bottom="10.0" top="10.0" />
+                                    </padding></Label>
+                                 <TextField fx:id="keyText" onMouseClicked="#onKeyChoose" prefHeight="25.0" prefWidth="199.0" />
+                              </children>
+                              <padding>
+                                 <Insets left="10.0" right="10.0" />
+                              </padding>
+                           </VBox>
+                           <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="112.0" prefWidth="382.0">
+                              <children>
+                                 <Label text="Wprowadz tekst">
+                                    <font>
+                                       <Font size="18.0" />
+                                    </font>
+                                    <padding>
+                                       <Insets bottom="10.0" />
+                                    </padding></Label>
+                                 <TextField fx:id="decryptTextInput" prefHeight="40.0" prefWidth="362.0" />
+                              </children>
+                              <padding>
+                                 <Insets left="10.0" right="10.0" />
+                              </padding>
+                           </VBox>
+                        </children>
+                     </HBox>
+                     <Label alignment="CENTER" layoutX="262.0" layoutY="298.0" text="Odszyfruj">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Button fx:id="decryptButton" layoutX="249.0" layoutY="516.0" mnemonicParsing="false" onAction="#onDecryptButton" prefHeight="30.0" prefWidth="103.0" text="Odszyfruj">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Button>
+                     <Label layoutX="227.0" layoutY="559.0" text="Odszyfrowany tekst">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="decryptedText" editable="false" layoutX="110.0" layoutY="614.0" prefHeight="40.0" prefWidth="381.0" />
+                     <Line endX="300.0" layoutX="300.0" layoutY="281.0" startX="-300.0" />
             </children>
           </AnchorPane>
         </content>
       </Tab>
-      <Tab text="File">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-            <children>
-              <HBox prefHeight="480.0" prefWidth="600.0">
-                <children>
-                  <VBox alignment="CENTER" prefHeight="480.0" prefWidth="280.0">
-                    <children>
-                      <Label text="Enter private key">
-                        <font>
-                          <Font name="System Bold" size="14.0" />
-                        </font>
-                      </Label>
-                      <TextArea fx:id="EnterPrivateKeyForFiles" prefHeight="115.0" prefWidth="295.0">
-                        <VBox.margin>
-                          <Insets bottom="10.0" />
-                        </VBox.margin>
-                      </TextArea>
-                      <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#searchFileByExplorerAndEncryptData" prefHeight="85.0" prefWidth="289.0" style="-fx-background-color: grey;" text="Encrypt File">
-                        <font>
-                          <Font size="14.0" />
-                        </font>
-                        <effect>
-                          <Glow />
-                        </effect>
-                        <VBox.margin>
-                          <Insets bottom="10.0" />
-                        </VBox.margin>
-                      </Label>
-                    </children>
-                    <HBox.margin>
-                      <Insets right="20.0" />
-                    </HBox.margin>
-                  </VBox>
-                  <VBox alignment="CENTER" prefHeight="480.0" prefWidth="280.0">
-                    <HBox.margin>
-                      <Insets left="20.0" />
-                    </HBox.margin>
-                    <children>
-                      <Label text="Enter public key">
-                        <font>
-                          <Font name="System Bold" size="14.0" />
-                        </font>
-                      </Label>
-                      <TextArea fx:id="enterPublicKeyForFiles" prefHeight="115.0" prefWidth="295.0">
-                        <VBox.margin>
-                          <Insets bottom="10.0" />
-                        </VBox.margin>
-                      </TextArea>
-                      <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#searchFileByExplorerAndDecryptData" prefHeight="85.0" prefWidth="289.0" style="-fx-background-color: grey;" text="Decrypt File">
-                        <font>
-                          <Font size="14.0" />
-                        </font>
-                        <effect>
-                          <Glow />
-                        </effect>
-                      </Label>
-                    </children>
-                  </VBox>
-                </children>
-              </HBox>
-            </children>
-          </AnchorPane>
-        </content>
-      </Tab>
+        <Tab text="Pliki">
+            <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="180.0" prefWidth="200.0">
+                <HBox alignment="TOP_RIGHT" prefHeight="132.0" prefWidth="600.0" AnchorPane.bottomAnchor="557.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <VBox alignment="TOP_CENTER" prefHeight="436.0" prefWidth="220.0">
+                        <padding>
+                            <Insets bottom="20.0" left="10.0" right="10.0" top="30.0" />
+                        </padding>
+                        <Label text="Typ szyfrowania tesktu">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="10.0" />
+                            </padding>
+                        </Label>
+                        <ComboBox fx:id="menuFileEncryptType" onAction="#onTypeMenuFile" prefWidth="150.0" />
+                    </VBox>
+                    <VBox alignment="TOP_CENTER" prefHeight="251.0" prefWidth="391.0">
+                        <padding>
+                            <Insets bottom="20.0" left="10.0" right="10.0" top="30.0" />
+                        </padding>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Wybierz plik" textAlignment="CENTER">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                        </Label>
+                        <TextField fx:id="encryptFileTextInput" onMouseClicked="#onChoosePlainMessage" prefHeight="40.0" prefWidth="328.0" />
+                    </VBox>
+                </HBox>
+                <Button fx:id="encryptFileButton" layoutX="249.0" layoutY="132.0" mnemonicParsing="false" onAction="#onEncryptButtonFile" prefHeight="30.0" prefWidth="103.0" text="Szyfruj">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <TextField fx:id="encryptedFileText" editable="false" layoutX="114.0" layoutY="216.0" prefHeight="40.0" prefWidth="381.0" />
+                <Label layoutX="225.0" layoutY="189.0" text="Zaszyfrowany tekst">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                    <padding>
+                        <Insets bottom="10.0" />
+                    </padding>
+                </Label>
+                <HBox layoutX="1.0" layoutY="336.0" prefHeight="110.0" prefWidth="600.0">
+                    <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="121.0" prefWidth="219.0">
+                        <padding>
+                            <Insets left="10.0" right="10.0" />
+                        </padding>
+                        <Label text="Wybierz klucz">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="10.0" top="10.0" />
+                            </padding>
+                        </Label>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                            <TextField fx:id="keyFileText" onMouseClicked="#onKeyChoose" prefHeight="25.0" prefWidth="200.0" />
+                        </HBox>
+                    </VBox>
+                    <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="112.0" prefWidth="382.0">
+                        <padding>
+                            <Insets left="10.0" right="10.0" />
+                        </padding>
+                        <Label text="Wybierz plik">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="10.0" />
+                            </padding>
+                        </Label>
+                        <TextField fx:id="decryptFileTextInput" onMouseClicked="#onEncryptedMessageChoose" prefHeight="40.0" prefWidth="362.0" />
+                    </VBox>
+                </HBox>
+                <Label alignment="CENTER" layoutX="262.0" layoutY="298.0" text="Odszyfruj">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <Button fx:id="decryptFileButton" layoutX="249.0" layoutY="516.0" mnemonicParsing="false" onAction="#onDecryptFileButton" prefHeight="30.0" prefWidth="103.0" text="Odszyfruj">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Button>
+                <Label layoutX="227.0" layoutY="559.0" text="Odszyfrowany tekst">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="decryptedFileText" editable="false" layoutX="110.0" layoutY="614.0" prefHeight="40.0" prefWidth="381.0" />
+                <Line endX="300.0" layoutX="300.0" layoutY="281.0" startX="-300.0" />
+            </AnchorPane>
+        </Tab>
     </tabs>
   </TabPane>
   <Label text="Szyforwanie i odszyfrowanie" />
