@@ -1,72 +1,153 @@
 package com.example.kryptogui;
 
+import org.javatuples.Triplet;
+
 public class CustomHamming {
 
-    public static String encodeHamming(String input) {
-        int dataLength = input.length();
-        int parityBits = 4;
+    public static String encode(String bytes)
+    {
+        int size = bytes.length();
 
-        StringBuilder encodedData = new StringBuilder(dataLength + parityBits);
+        int[] arr = new int[size];
 
-        for (int i = 0; i < parityBits; i++) {
-            encodedData.append('0');
+        for (int i = 0; i<size; i++) {
+            arr[i] = Integer.parseInt(String.valueOf(bytes.charAt(i)));
         }
 
-        for (int i = 0, j = 0; i < dataLength + parityBits; i++) {
-            if (i == (1 << j) - 1) {
+        int[] hammingCode = getHammingCode(arr);
+        return toString(hammingCode);
+    }
+
+    private static int[] getHammingCode(int[] data) {
+        int i, j = 0, k = 0;
+        int size = data.length;
+
+        int parityBits = countParityBits(size);
+        int[] returnData = new int[size + parityBits];
+
+        for(i = 0; i < returnData.length; i++) {
+            if(Math.pow(2, j) == i + 1) {
+                returnData[(i)] = 2;
                 j++;
-            } else {
-                encodedData.append(input.charAt(i - j));
+            }
+            else {
+                returnData[(k + j)] = data[k++];
             }
         }
 
-        for (int j = 0; j < parityBits; j++) {
-            int parityBitPosition = (1 << j) - 1;
-            int parity = calculateParity(encodedData.toString(), parityBitPosition);
-            encodedData.setCharAt(parityBitPosition, (parity == 1) ? '1' : '0');
+        for(i = 0; i < parityBits; i++) {
+            returnData[((int) Math.pow(2, i)) - 1] = getParityBit(returnData, i);
         }
 
-        return encodedData.toString();
+        return returnData;
     }
 
-    public static int calculateParity(String data, int parityBitPosition) {
-        int parity = 0;
-        for (int i = parityBitPosition; i < data.length(); i += (parityBitPosition + 1) * 2) {
-            for (int j = i; j < Math.min(i + parityBitPosition + 1, data.length()); j++) {
-                if (data.charAt(j) == '1') {
-                    parity ^= 1;
+    private static int countParityBits(int size) {
+        int i = 0, parityBits = 0;
+        while(i < size) {
+            if(isParityBit(i, parityBits)) {
+                parityBits++;
+            }
+            else {
+                i++;
+            }
+        }
+        return parityBits;
+    }
+
+    private static boolean isParityBit(int i, int parityBit) {
+        return Math.pow(2, parityBit) == (i + parityBit + 1);
+    }
+
+    private static int getParityBit(int[] returnData, int pow) {
+        int parityBit = 0;
+        int size = returnData.length;
+
+        for(int i = 0; i < size; i++) {
+            if(returnData[i] != 2) {
+                int k = (i + 1);
+                String str = Integer.toBinaryString(k);
+
+                int temp = ((Integer.parseInt(str)) / ((int) Math.pow(10, pow))) % 10;
+                if(temp == 1) {
+                    if(returnData[i] == 1) {
+                        parityBit = (parityBit + 1) % 2;
+                    }
                 }
             }
         }
-        return parity;
+        return parityBit;
     }
 
-    public static String decodeHamming(String receivedData) {
-        int parityBits = 4;
-        StringBuilder decodedData = new StringBuilder(receivedData.length() - parityBits);
+    public static Triplet<String, String, Integer> decode(String bytes) {
+        int size = bytes.length();
 
-        for (int i = 0, j = 0; i < receivedData.length(); i++) {
-            if (i == (1 << j) - 1) {
-                j++;
-            } else {
-                decodedData.append(receivedData.charAt(i));
+        int[] arr = new int[size];
+
+        for (int i = 0; i<size; i++) {
+            arr[i] = Integer.parseInt(String.valueOf(bytes.charAt(i)));
+        }
+
+        return receiveData(arr, countParityBits(arr.length));
+    }
+
+    private static Triplet<String, String, Integer> receiveData(int[] data, int parityBits) {
+        int pow;
+        int size = data.length;
+        int[] parityArray = new int[parityBits];
+        StringBuilder errorLoc = new StringBuilder();
+
+        for(pow = 0; pow < parityBits; pow++) {
+            for(int i = 0; i < size; i++) {
+                int j = i + 1;
+                String str = Integer.toBinaryString(j);
+
+                int bit = ((Integer.parseInt(str)) / ((int) Math.pow(10, pow))) % 10;
+                if(bit == 1) {
+                    if(data[i] == 1) {
+                        parityArray[pow] = (parityArray[pow] + 1) % 2;
+                    }
+                }
+            }
+            errorLoc.insert(0, parityArray[pow]);
+        }
+
+        int[] correctData = new int[size];
+        int finalLoc = Integer.parseInt(errorLoc.toString(), 2);
+        if(finalLoc != 0) {
+            data[finalLoc - 1] = (data[finalLoc - 1] + 1) % 2;
+        }
+
+        for(int i = 0; i < size; i++) {
+            correctData = data;
+        }
+
+        int i = size - parityBits;
+        int[] originalData = new int[i];
+        pow = parityBits - 1;
+        for(int k = size; k > 0; k--) {
+            if(Math.pow(2, pow) != k) {
+                i--;
+                originalData[i] = data[k - 1];
+            }
+            else {
+                pow--;
             }
         }
 
-        int errorPosition = 0;
-        for (int j = 0; j < parityBits; j++) {
-            int parityBitPosition = (1 << j) - 1;
-            int parity = calculateParity(receivedData, parityBitPosition);
-            if (parity != 0) {
-                errorPosition += parityBitPosition + 1;
-            }
-        }
+        return getHammingCodes(originalData, correctData, finalLoc);
+    }
 
-        if (errorPosition > 0) {
-            decodedData.setCharAt(errorPosition - 1, (decodedData.charAt(errorPosition - 1) == '1') ? '0' : '1');
-        }
+    private static Triplet<String, String, Integer> getHammingCodes(int[] originalData, int[] correctData, int errorLoc) {
+        return new Triplet<>(toString(originalData), toString(correctData), errorLoc);
+    }
 
-        return decodedData.toString();
+    private static String toString(int[] ints) {
+        StringBuilder result = new StringBuilder();
+        for (int i : ints) {
+            result.append(i);
+        }
+        return result.toString();
     }
 
 }

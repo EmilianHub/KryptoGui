@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -23,7 +24,8 @@ public class HelloController {
             encryptedText, decryptedText,
             encryptFileTextInput, decryptedFileText,
             encryptedFileText, keyFileText, decryptFileTextInput,
-            generateHamming, checkIntegral, toImageText, toBytesText;
+            generateHamming, checkIntegral, toImageText, toBytesText,
+            generatedCode, correctCode, originalCode, errorFound;
 
     @FXML
     protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox;
@@ -33,7 +35,6 @@ public class HelloController {
     File selectedEncryptedMessage;
     File toBytesImage;
     File toImageBytes;
-    ImageView imageView;
     FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
@@ -199,19 +200,19 @@ public class HelloController {
     }
 
     @FXML
-    protected void onGenerateHamming() {
-
+    protected void onGenerateButton() {
+        String bytes = generateHamming.getText();
+        String encode = CustomHamming.encode(bytes);
+        generatedCode.setText(encode);
     }
 
     @FXML
-    protected void onCheckIntegral() {
-
+    protected void onCheckButton() {
+        String bytes = checkIntegral.getText();
+        Triplet<String, String, Integer> decode = CustomHamming.decode(bytes);
+        correctCode.setText(decode.getValue1());
+        originalCode.setText(decode.getValue0());
+        errorFound.setText(decode.getValue2().toString());
     }
-
-    @FXML
-    protected void onGenerateButton() {}
-
-    @FXML
-    protected void onCheckButton() {}
 
 }
