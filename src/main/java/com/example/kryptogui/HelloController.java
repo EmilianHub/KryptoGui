@@ -4,9 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.javatuples.Pair;
@@ -90,7 +88,7 @@ public class HelloController {
 
     @FXML
     protected void onDecryptButton() {
-        Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> readKeyFile = FileReader.readKeyFile(selectedKey);
+        Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> readKeyFile = CustomFileReader.readKeyFile(selectedKey);
         String message = decryptTextInput.getText();
         assert readKeyFile != null;
         decryptWithType(readKeyFile, message);
@@ -152,7 +150,7 @@ public class HelloController {
 
     @FXML
     protected void onDecryptFileButton() {
-        Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> readKeyFile = FileReader.readKeyFile(selectedKey);
+        Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> readKeyFile = CustomFileReader.readKeyFile(selectedKey);
         assert readKeyFile != null;
         decryptWithType(readKeyFile, selectedEncryptedMessage);
     }
@@ -190,7 +188,7 @@ public class HelloController {
     }
 
     @FXML
-    protected void onRollbackButton() throws IOException {
+    protected void onRollbackButton() {
         FilesConverter.convertBackward(toImageBytes, onExtensionBox());
     }
 

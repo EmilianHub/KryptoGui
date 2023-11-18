@@ -3,9 +3,7 @@ package com.example.kryptogui;
 import org.javatuples.Triplet;
 import org.javatuples.Pair;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.*;
 
 public class TransPol {
@@ -34,7 +32,7 @@ public class TransPol {
     }
 
     TransPol(File file, Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> generatedKey) {
-        String password = FileReader.readTextFile(file);
+        String password = CustomFileReader.readTextFile(file);
         initKey(generatedKey);
         init(password);
     }
@@ -134,10 +132,10 @@ public class TransPol {
             case "polialfabet" -> encryptString = shiftEncryptionPoli(password, type);
         }
         if (!encryptString.isBlank()) {
-            FileReader.saveEncryptedTextString(encryptString);
+            CustomFileReader.saveEncryptedTextString(encryptString);
             return encryptString;
         } else {
-            FileReader.saveEncryptedText(encrypt);
+            CustomFileReader.saveEncryptedText(encrypt);
             return chararrayToString(encrypt);
         }
     }
@@ -299,7 +297,7 @@ public class TransPol {
     }
 
     public String decryptWithFile(File encryptedFile, Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> readKey) {
-        String message = FileReader.readTextFile(encryptedFile);
+        String message = CustomFileReader.readTextFile(encryptedFile);
         return decodeMessageBasedOnKey(message, readKey);
     }
 

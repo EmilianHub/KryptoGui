@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 
-public class FileReader {
+public class CustomFileReader {
     public static String readTextFile(File file) {
         StringBuilder result = new StringBuilder();
         try {

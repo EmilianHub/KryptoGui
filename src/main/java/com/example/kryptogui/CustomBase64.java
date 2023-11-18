@@ -28,7 +28,7 @@ public class CustomBase64 {
             }
         }
 
-        FileReader.saveEncryptedTextString(encodedText.toString());
+        CustomFileReader.saveEncryptedTextString(encodedText.toString());
         return encodedText.toString();
     }
 
@@ -98,12 +98,12 @@ public class CustomBase64 {
     }
 
     public static String encode(File plaintTextFile) {
-        String plaintText = FileReader.readTextFile(plaintTextFile);
+        String plaintText = CustomFileReader.readTextFile(plaintTextFile);
         return encode(plaintText);
     }
 
     public static String decode(File encryptedTextFile) {
-        String encryptedText = FileReader.readTextFile(encryptedTextFile);
+        String encryptedText = CustomFileReader.readTextFile(encryptedTextFile);
         return decode(encryptedText);
     }
 }

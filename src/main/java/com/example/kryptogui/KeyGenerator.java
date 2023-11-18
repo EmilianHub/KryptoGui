@@ -17,7 +17,7 @@ public class KeyGenerator {
         Pair<Integer, Integer> size = new Pair<>(length, length);
         Pair<Integer, Integer> startPoint = findStartPoint(method, length, length);
         String keyAsString = String.format("%s;%s;%s;%s;%s", length, length, method, startPoint.getValue0(), startPoint.getValue1());
-        FileReader.saveKeyToFile(keyAsString);
+        CustomFileReader.saveKeyToFile(keyAsString);
 
         return new Triplet<>(size, method, startPoint);
     }
@@ -44,7 +44,7 @@ public class KeyGenerator {
     }
 
     public static Triplet<Pair<Integer, Integer>, String, Pair<Integer, Integer>> generateKey(String type, File selectedPlainMessage) {
-        String plainText = FileReader.readTextFile(selectedPlainMessage);
+        String plainText = CustomFileReader.readTextFile(selectedPlainMessage);
         return generateKey(type, plainText);
     }
 }
