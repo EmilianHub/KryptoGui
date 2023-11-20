@@ -1,11 +1,6 @@
 package com.example.kryptogui;
 
-import com.example.kryptogui.CustomFileReader;
-
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -61,8 +56,7 @@ public class FileEncryptionRSA {
                  FileOutputStream out = new FileOutputStream("encrypted.txt")) {
                 processFile(cipher, in, out);
             }
-        } catch (IOException | NoSuchAlgorithmException |
-                 NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -76,8 +70,7 @@ public class FileEncryptionRSA {
                  FileOutputStream out = new FileOutputStream("decrypted.txt")) {
                 processFile(cipher, in, out);
             }
-        } catch (IOException | NoSuchAlgorithmException |
-                 NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
