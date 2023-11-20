@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -12,7 +13,9 @@ import org.javatuples.Triplet;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class HelloController {
@@ -23,16 +26,19 @@ public class HelloController {
             encryptFileTextInput, decryptedFileText,
             encryptedFileText, keyFileText, decryptFileTextInput,
             generateHamming, checkIntegral, toImageText, toBytesText,
-            generatedCode, correctCode, originalCode, errorFound;
+            generatedCode, correctCode, originalCode, errorFound,
+            rsaText, primeP, primeQ, rsaKeyChoose, rsaPbKeyChoose,
+            rsaPvKeyChoose, rsaTextFileChoose;
 
     @FXML
     protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox;
+
+    @FXML
+    protected TextArea rsaSubmit;
+
     HashMap<String, String> stringStringHashMap = new HashMap<>();
-    File selectedKey;
-    File selectedPlainMessage;
-    File selectedEncryptedMessage;
-    File toBytesImage;
-    File toImageBytes;
+    File selectedKey, selectedPlainMessage, selectedEncryptedMessage, toBytesImage, toImageBytes, rsaKey,
+            publicKeyFile, privateKeyFile, rsaFile;
     FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
@@ -54,6 +60,18 @@ public class HelloController {
 
         ObservableList<String> extensionTypes = FXCollections.observableArrayList("jpg", "png");
         extensionBox.setItems(extensionTypes);
+
+        primeQ.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                primeQ.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        primeP.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                primeP.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 
     @FXML
@@ -144,7 +162,7 @@ public class HelloController {
     @FXML
     protected void onEncryptedMessageChoose() {
         selectedEncryptedMessage = fileChooser.showOpenDialog(new Stage());
-        String filePath = Objects.nonNull(selectedEncryptedMessage)? selectedEncryptedMessage.getPath() : "";
+        String filePath = Objects.nonNull(selectedEncryptedMessage) ? selectedEncryptedMessage.getPath() : "";
         decryptFileTextInput.setText(filePath);
     }
 
@@ -213,4 +231,80 @@ public class HelloController {
         errorFound.setText(decode.getValue2().toString());
     }
 
+    @FXML
+    protected void onRsaEncrypt() {
+        try {
+            String text = rsaText.getText();
+            int p = Integer.parseInt(primeP.getText());
+            int q = Integer.parseInt(primeQ.getText());
+            RSA rsa = new RSA(p, q);
+            List<BigInteger> encrypt = rsa.encrypt(text);
+            setRsaResult(encrypt.toString(), rsa, false);
+        } catch (Exception e) {
+            rsaSubmit.setText(e.getMessage());
+        }
+    }
+
+    @FXML
+    protected void onRsaDecrypt() {
+        try {
+            String text = rsaText.getText();
+            RSA rsa = new RSA(rsaKey);
+            String decrypt = rsa.decrypt(text);
+            setRsaResult(decrypt, rsa, true);
+        } catch (Exception e) {
+            rsaSubmit.setText(e.getMessage());
+        }
+    }
+
+    public void setRsaResult(String result, RSA rsa, boolean isDecrypted) {
+        String text = String.format("N = %s\nTocjent = %s\nWynik: %s", rsa.getN(), rsa.getPhi(), result);
+        if(isDecrypted) {
+            text = String.format("N = %s\nKlucz prywatny = %s\nWynik: %s", rsa.getN(), rsa.getD(), result);
+        }
+        rsaSubmit.setText(text);
+    }
+
+    @FXML
+    protected void onRsaKeyChoose() {
+        rsaKey = fileChooser.showOpenDialog(new Stage());
+        String filePath = Objects.nonNull(rsaKey) ? rsaKey.getPath() : "";
+        rsaKeyChoose.setText(filePath);
+    }
+
+    @FXML
+    protected void onKeyGenerate() {
+        FileEncryptionRSA.generateKeyPair();
+    }
+
+    @FXML
+    protected void onRsaTextFileChoose() {
+        rsaFile = fileChooser.showOpenDialog(new Stage());
+        String path = Objects.nonNull(rsaFile) ? rsaFile.getPath() : "";
+        rsaTextFileChoose.setText(path);
+    }
+
+    @FXML
+    protected void onRsaPbKeyChoose() {
+        publicKeyFile = fileChooser.showOpenDialog(new Stage());
+        String path = Objects.nonNull(publicKeyFile) ? publicKeyFile.getPath() : "";
+        rsaPbKeyChoose.setText(path);
+    }
+
+    @FXML
+    protected void onRsaPvKeyChoose() {
+        privateKeyFile = fileChooser.showOpenDialog(new Stage());
+        String path = Objects.nonNull(privateKeyFile) ? privateKeyFile.getPath() : "";
+        rsaPvKeyChoose.setText(path);
+    }
+
+    @FXML
+    protected void onEnRsaFile() {
+        FileEncryptionRSA.encryptFile(rsaFile, publicKeyFile);
+    }
+
+    @FXML
+    protected void onDeRsaFile() {
+        FileEncryptionRSA.decryptFile(rsaFile, privateKeyFile);
+    }
 }

@@ -112,14 +112,10 @@ public class CustomHamming {
             errorLoc.insert(0, parityArray[pow]);
         }
 
-        int[] correctData = new int[size];
+
         int finalLoc = Integer.parseInt(errorLoc.toString(), 2);
         if(finalLoc != 0) {
             data[finalLoc - 1] = (data[finalLoc - 1] + 1) % 2;
-        }
-
-        for(int i = 0; i < size; i++) {
-            correctData = data;
         }
 
         int i = size - parityBits;
@@ -135,7 +131,7 @@ public class CustomHamming {
             }
         }
 
-        return getHammingCodes(originalData, correctData, finalLoc);
+        return getHammingCodes(originalData, data, finalLoc);
     }
 
     private static Triplet<String, String, Integer> getHammingCodes(int[] originalData, int[] correctData, int errorLoc) {

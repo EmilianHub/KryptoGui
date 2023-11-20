@@ -93,7 +93,7 @@ public class CustomBase64 {
         } else if (c == '/') {
             return 63;
         } else {
-            return -1; // Invalid character
+            return -1;
         }
     }
 

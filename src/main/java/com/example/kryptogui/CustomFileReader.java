@@ -3,9 +3,7 @@ package com.example.kryptogui;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.Scanner;
 
 public class CustomFileReader {
@@ -54,6 +52,14 @@ public class CustomFileReader {
             bufferedWriter.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public static void saveToFile(String fileName, byte[] bytes) {
+        try (FileOutputStream fos = new FileOutputStream(fileName)) {
+            fos.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -60,6 +60,30 @@ public class TransPol {
         return (num + divisor - 1) / divisor;
     }
 
+    public String encrypt(String type) {
+        passwordAsCharArray = password.toCharArray();
+        Character[][] encrypt = new Character[0][0];
+        String encryptString = "";
+
+        switch (type) {
+            case "spiral" -> encrypt = encryptAsSpiral();
+            case "diagonal" -> encrypt = encryptAsDiagonal();
+            case "square" -> encrypt = encryptAsSquare();
+            case "monoalfabet" -> {
+                int key = getShiftKey(getSize());
+                encryptString = shiftEncryptMono(password, key);
+            }
+            case "polialfabet" -> encryptString = shiftEncryptionPoli(password, type);
+        }
+        if (!encryptString.isBlank()) {
+            CustomFileReader.saveEncryptedTextString(encryptString);
+            return encryptString;
+        } else {
+            CustomFileReader.saveEncryptedText(encrypt);
+            return chararrayToString(encrypt);
+        }
+    }
+
     public String shiftEncryptionPoli(String plaintext, String key) {
         StringBuilder ciphertext = new StringBuilder();
         int keyLength = key.length();
@@ -109,34 +133,11 @@ public class TransPol {
     }
 
     public static char decryptChar(char c, int shift) {
+        shift = (26 - shift) % 26;
         if (Character.isUpperCase(c)) {
-            return (char) ((c - 'A' - shift + 26) % 26 + 'A');
+            return (char) ((c - 'A' + shift) % 26 + 'A');
         } else {
-            return (char) ((c - 'a' - shift + 26) % 26 + 'a');
-        }
-    }
-
-    public String encrypt(String type) {
-        passwordAsCharArray = password.toCharArray();
-        Character[][] encrypt = new Character[0][0];
-        String encryptString = "";
-
-        switch (type) {
-            case "spiral" -> encrypt = encryptAsSpiral();
-            case "diagonal" -> encrypt = encryptAsDiagonal();
-            case "square" -> encrypt = encryptAsSquare();
-            case "monoalfabet" -> {
-                int key = getShiftKey(getSize());
-                encryptString = shiftEncryptMono(password, key);
-            }
-            case "polialfabet" -> encryptString = shiftEncryptionPoli(password, type);
-        }
-        if (!encryptString.isBlank()) {
-            CustomFileReader.saveEncryptedTextString(encryptString);
-            return encryptString;
-        } else {
-            CustomFileReader.saveEncryptedText(encrypt);
-            return chararrayToString(encrypt);
+            return (char) ((c - 'a' + shift) % 26 + 'a');
         }
     }
 
