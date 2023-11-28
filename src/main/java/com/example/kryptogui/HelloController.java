@@ -3,9 +3,7 @@ package com.example.kryptogui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.javatuples.Pair;
@@ -241,7 +239,7 @@ public class HelloController {
             List<BigInteger> encrypt = rsa.encrypt(text);
             setRsaResult(encrypt.toString(), rsa, false);
         } catch (Exception e) {
-            rsaSubmit.setText(e.getMessage());
+            showAlert(e.getMessage());
         }
     }
 
@@ -253,8 +251,13 @@ public class HelloController {
             String decrypt = rsa.decrypt(text);
             setRsaResult(decrypt, rsa, true);
         } catch (Exception e) {
-            rsaSubmit.setText(e.getMessage());
+            showAlert(e.getMessage());
         }
+    }
+
+    private void showAlert(String e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Podane liczby nie są względnie pierwsze", ButtonType.OK);
+        alert.showAndWait();
     }
 
     public void setRsaResult(String result, RSA rsa, boolean isDecrypted) {
@@ -275,6 +278,8 @@ public class HelloController {
     @FXML
     protected void onKeyGenerate() {
         FileEncryptionRSA.generateKeyPair();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Klucze zostały wygenerowane", ButtonType.OK);
+        alert.showAndWait();
     }
 
     @FXML

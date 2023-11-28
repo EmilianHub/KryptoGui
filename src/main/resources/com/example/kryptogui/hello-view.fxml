@@ -292,9 +292,9 @@
                   <Button layoutX="253.0" layoutY="41.0" mnemonicParsing="false" onAction="#onKeyGenerate" text="Generuj klucze" />
                   <Label layoutX="61.0" layoutY="102.0" text="Wybierz klucz publiczny" />
                   <Label layoutX="62.0" layoutY="146.0" text="Wybierz klucz prywatny" />
-                  <TextField fx:id="rsaPbKeyChoose" editable="false" layoutX="253.0" layoutY="98.0" onMouseClicked="#onRsaPbKeyChoose" prefHeight="25.0" prefWidth="273.0" />
-                  <TextField fx:id="rsaPvKeyChoose" editable="false" layoutX="252.0" layoutY="142.0" onMouseClicked="#onRsaPvKeyChoose" prefHeight="25.0" prefWidth="275.0" />
-                  <TextField fx:id="rsaTextFileChoose" editable="false" layoutX="254.0" layoutY="196.0" onMouseClicked="#onRsaTextFileChoose" prefHeight="25.0" prefWidth="272.0" />
+                  <TextField fx:id="rsaPbKeyChoose" editable="false" layoutX="253.0" layoutY="98.0" onMouseClicked="#onRsaPbKeyChoose" prefHeight="25.0" prefWidth="329.0" />
+                  <TextField fx:id="rsaPvKeyChoose" editable="false" layoutX="252.0" layoutY="142.0" onMouseClicked="#onRsaPvKeyChoose" prefHeight="25.0" prefWidth="330.0" />
+                  <TextField fx:id="rsaTextFileChoose" editable="false" layoutX="254.0" layoutY="196.0" onMouseClicked="#onRsaTextFileChoose" prefHeight="25.0" prefWidth="330.0" />
                   <Label layoutX="67.0" layoutY="200.0" text="Wybierz plik tekstowy" />
                   <Button layoutX="202.0" layoutY="271.0" mnemonicParsing="false" onAction="#onEnRsaFile" prefHeight="25.0" prefWidth="63.0" text="Szyfruj" />
                   <Button layoutX="315.0" layoutY="271.0" mnemonicParsing="false" onAction="#onDeRsaFile" prefHeight="25.0" prefWidth="73.0" text="Odszyfruj" />

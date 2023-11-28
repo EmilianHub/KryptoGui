@@ -13,16 +13,18 @@ public class RSA {
     public RSA(int p, int q) {
         BigInteger bigP = BigInteger.valueOf(p);
         BigInteger bigQ = BigInteger.valueOf(q);
-        if (!bigQ.isProbablePrime(100) || !bigP.isProbablePrime(100)) {
-            throw new RuntimeException("Podane liczby nie są pierwsze");
+        if (bigP.gcd(bigQ).intValue() != 1) {
+            throw new RuntimeException("Podane liczby nie są względnie pierwsze");
         }
         n = bigP.multiply(bigQ);
 
         phi = bigP.subtract(BigInteger.ONE).multiply(bigQ.subtract(BigInteger.ONE));
 
-        e = new BigInteger(phi.getLowestSetBit(), new Random());
+        int i = 0;
+        e = new BigInteger(phi.bitLength(), new Random());
         while (phi.gcd(e).intValue() > 1) {
-            e = e.add(new BigInteger("2"));
+            e = e.add(e.modPow(BigInteger.valueOf(i), n)).add(BigInteger.valueOf(i));
+            i++;
         }
 
         d = e.modInverse(phi);

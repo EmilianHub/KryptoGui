@@ -77,7 +77,7 @@ public class FileEncryptionRSA {
 
     private static void processFile(Cipher cipher, InputStream in, OutputStream out)
             throws javax.crypto.IllegalBlockSizeException, javax.crypto.BadPaddingException, java.io.IOException {
-        byte[] inputBuffer = new byte[1024];
+        byte[] inputBuffer = new byte[2048];
         int bytesRead;
         while ((bytesRead = in.read(inputBuffer)) != -1) {
             byte[] outputBuffer = cipher.update(inputBuffer, 0, bytesRead);
