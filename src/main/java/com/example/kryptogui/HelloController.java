@@ -26,17 +26,21 @@ public class HelloController {
             generateHamming, checkIntegral, toImageText, toBytesText,
             generatedCode, correctCode, originalCode, errorFound,
             rsaText, primeP, primeQ, rsaKeyChoose, rsaPbKeyChoose,
-            rsaPvKeyChoose, rsaTextFileChoose;
+            rsaPvKeyChoose, rsaTextFileChoose,
+            desFileChoose, desText;
 
     @FXML
-    protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox;
+    protected PasswordField desPassword;
 
     @FXML
-    protected TextArea rsaSubmit;
+    protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox, desExtension;
+
+    @FXML
+    protected TextArea rsaSubmit, desResult;
 
     HashMap<String, String> stringStringHashMap = new HashMap<>();
     File selectedKey, selectedPlainMessage, selectedEncryptedMessage, toBytesImage, toImageBytes, rsaKey,
-            publicKeyFile, privateKeyFile, rsaFile;
+            publicKeyFile, privateKeyFile, rsaFile, desFile;
     FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
@@ -49,6 +53,9 @@ public class HelloController {
         ObservableList<String> encryptTypeList = FXCollections.observableArrayList(stringStringHashMap.keySet().stream().toList());
         menuEncryptType.setItems(encryptTypeList);
         menuFileEncryptType.setItems(encryptTypeList);
+
+        ObservableList<String> desExtensions = FXCollections.observableArrayList(List.of("png", "jpg", "txt"));
+        desExtension.setItems(desExtensions);
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(
@@ -255,8 +262,8 @@ public class HelloController {
         }
     }
 
-    private void showAlert(String e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Podane liczby nie są względnie pierwsze", ButtonType.OK);
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
         alert.showAndWait();
     }
 
@@ -311,5 +318,63 @@ public class HelloController {
     @FXML
     protected void onDeRsaFile() {
         FileEncryptionRSA.decryptFile(rsaFile, privateKeyFile);
+    }
+
+    @FXML
+    protected void onDesFileChoose() {
+        desFile = fileChooser.showOpenDialog(new Stage());
+        String path = Objects.nonNull(desFile) ? desFile.getPath() : "";
+        desFileChoose.setText(path);
+    }
+
+    @FXML
+    protected void onDesEncrypt() {
+        validateDES(DesOperation.ENCRYPT);
+        String result = "";
+        String inputText = desText.getText();
+        if (Objects.nonNull(desFile) && !inputText.isBlank()) {
+            showAlert("Podaj plik lub text. Oba pole nie mogą być uzupełnione");
+        }
+        if (!inputText.isBlank()) {
+            result = CustomDES.encrypt(inputText, desPassword.getText());
+        } else if (Objects.nonNull(desFile)){
+            try {
+                CustomDES.encrypt(desFile, desPassword.getText());
+                result = "Plik zaszyfrowany";
+            } catch (Exception e) {
+                result = e.getMessage();
+            }
+        }
+        desResult.setText(result);
+    }
+
+    @FXML
+    protected void onDesDecrypt() {
+        validateDES(DesOperation.DECRYPT);
+        String result = "";
+        String inputText = desText.getText();
+        if (!inputText.isBlank()) {
+            result = CustomDES.decrypt(inputText, desPassword.getText());
+        } else if (Objects.nonNull(desFile)){
+            try {
+                CustomDES.decrypt(desFile, desPassword.getText(), desExtension.getValue());
+                result = "Plik odszyfrowany";
+            } catch (Exception e) {
+                result = e.getMessage();
+            }
+        }
+        desResult.setText(result);
+    }
+
+    private void validateDES(DesOperation operation) {
+        if (Objects.nonNull(desFile) && !desText.getText().isBlank()) {
+            showAlert("Podaj plik lub text. Oba pole nie mogą być uzupełnione");
+        } else if (DesOperation.DECRYPT.equals(operation) && Objects.nonNull(desFile) && Objects.isNull(desExtension.getValue())) {
+            showAlert("Wybierz rozszerzenie");
+        }
+    }
+
+    public enum DesOperation {
+        ENCRYPT, DECRYPT
     }
 }

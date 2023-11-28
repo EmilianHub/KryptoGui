@@ -300,6 +300,23 @@
                   <Button layoutX="315.0" layoutY="271.0" mnemonicParsing="false" onAction="#onDeRsaFile" prefHeight="25.0" prefWidth="73.0" text="Odszyfruj" />
                </children></AnchorPane>
             </Tab>
+            <Tab text="DES">
+                <AnchorPane>
+               <children>
+                  <ComboBox fx:id="desExtension" layoutX="294.0" layoutY="48.0" prefWidth="150.0" />
+                  <Label layoutX="113.0" layoutY="52.0" text="Wybierz rozszerzenie" />
+                  <Label layoutX="138.0" layoutY="113.0" text="Podaj hasło" />
+                  <Label layoutX="140.0" layoutY="162.0" text="Podaj tekst" />
+                  <TextField fx:id="desText" layoutX="292.0" layoutY="158.0" prefHeight="25.0" prefWidth="277.0" />
+                  <TextArea fx:id="desResult" editable="false" layoutX="75.0" layoutY="345.0" prefHeight="307.0" prefWidth="473.0" />
+                  <Button layoutX="209.0" layoutY="271.0" mnemonicParsing="false" onAction="#onDesEncrypt" prefHeight="25.0" prefWidth="67.0" text="Szyfruj" />
+                  <Button layoutX="293.0" layoutY="271.0" mnemonicParsing="false" onAction="#onDesDecrypt" text="Odszyfruj" />
+                  <Label layoutX="161.0" layoutY="183.0" prefHeight="17.0" prefWidth="17.0" text="lub" />
+                  <Label layoutX="137.0" layoutY="215.0" text="Wybierz plik" />
+                  <TextField fx:id="desFileChoose" editable="false" layoutX="293.0" layoutY="211.0" onMouseClicked="#onDesFileChoose" prefHeight="25.0" prefWidth="278.0" />
+                  <PasswordField fx:id="desPassword" layoutX="295.0" layoutY="109.0" prefHeight="25.0" prefWidth="273.0" />
+               </children></AnchorPane>
+            </Tab>
         </tabs>
     </TabPane>
     <Label text="Szyforwanie i odszyfrowanie" />
