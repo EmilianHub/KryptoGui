@@ -27,20 +27,21 @@ public class HelloController {
             generatedCode, correctCode, originalCode, errorFound,
             rsaText, primeP, primeQ, rsaKeyChoose, rsaPbKeyChoose,
             rsaPvKeyChoose, rsaTextFileChoose,
-            desFileChoose, desText;
+            desFileChoose, desText,
+            rcText, rcFileChoose;
 
     @FXML
-    protected PasswordField desPassword;
+    protected PasswordField desPassword, rcPassword;
 
     @FXML
-    protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox, desExtension;
+    protected ComboBox<String> menuEncryptType, menuFileEncryptType, extensionBox, desExtension, rcExtension;
 
     @FXML
-    protected TextArea rsaSubmit, desResult;
+    protected TextArea rsaSubmit, desResult, rcResult;
 
     HashMap<String, String> stringStringHashMap = new HashMap<>();
     File selectedKey, selectedPlainMessage, selectedEncryptedMessage, toBytesImage, toImageBytes, rsaKey,
-            publicKeyFile, privateKeyFile, rsaFile, desFile;
+            publicKeyFile, privateKeyFile, rsaFile, desFile, rcFile;
     FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
@@ -56,6 +57,7 @@ public class HelloController {
 
         ObservableList<String> desExtensions = FXCollections.observableArrayList(List.of("png", "jpg", "txt"));
         desExtension.setItems(desExtensions);
+        rcExtension.setItems(desExtensions);
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(
@@ -329,7 +331,7 @@ public class HelloController {
 
     @FXML
     protected void onDesEncrypt() {
-        validateDES(DesOperation.ENCRYPT);
+        validateDES(Operation.ENCRYPT);
         String result = "";
         String inputText = desText.getText();
         if (Objects.nonNull(desFile) && !inputText.isBlank()) {
@@ -350,7 +352,7 @@ public class HelloController {
 
     @FXML
     protected void onDesDecrypt() {
-        validateDES(DesOperation.DECRYPT);
+        validateDES(Operation.DECRYPT);
         String result = "";
         String inputText = desText.getText();
         if (!inputText.isBlank()) {
@@ -366,15 +368,72 @@ public class HelloController {
         desResult.setText(result);
     }
 
-    private void validateDES(DesOperation operation) {
+    private void validateDES(Operation operation) {
         if (Objects.nonNull(desFile) && !desText.getText().isBlank()) {
             showAlert("Podaj plik lub text. Oba pole nie mogą być uzupełnione");
-        } else if (DesOperation.DECRYPT.equals(operation) && Objects.nonNull(desFile) && Objects.isNull(desExtension.getValue())) {
+        } else if (Operation.DECRYPT.equals(operation) && Objects.nonNull(desFile) && Objects.isNull(desExtension.getValue())) {
             showAlert("Wybierz rozszerzenie");
         }
     }
 
-    public enum DesOperation {
+    @FXML
+    protected void onRcFileChoose() {
+        rcFile = fileChooser.showOpenDialog(new Stage());
+        String path = Objects.nonNull(rcFile) ? rcFile.getPath() : "";
+        rcFileChoose.setText(path);
+    }
+
+    @FXML
+    protected void onRcEncrypt() {
+        validateRC(Operation.ENCRYPT);
+        String result = "";
+        String inputText = rcText.getText();
+        if (Objects.nonNull(rcFile) && !inputText.isBlank()) {
+            showAlert("Podaj plik lub text. Oba pole nie mogą być uzupełnione");
+        }
+        if (!inputText.isBlank()) {
+            result = CustomRC4.encrypt(inputText, rcPassword.getText());
+        } else if (Objects.nonNull(rcFile)){
+            try {
+                CustomDES.encrypt(rcFile, rcPassword.getText());
+                result = "Plik zaszyfrowany";
+            } catch (Exception e) {
+                result = e.getMessage();
+            }
+        }
+        rcResult.setText(result);
+    }
+
+    private void validateRC(Operation operation) {
+        if (Objects.nonNull(rcFile) && !rcText.getText().isBlank()) {
+            showAlert("Podaj plik lub text. Oba pole nie mogą być uzupełnione");
+        } else if (Operation.DECRYPT.equals(operation) && Objects.nonNull(rcFile) && Objects.isNull(rcExtension.getValue())) {
+            showAlert("Wybierz rozszerzenie");
+        }
+    }
+
+    @FXML
+    protected void onRcDecrypt() {
+        validateRC(Operation.DECRYPT);
+        String result = "";
+        String inputText = rcText.getText();
+        if (Objects.nonNull(rcFile) && !inputText.isBlank()) {
+            showAlert("Podaj plik lub text. Oba pole nie mogą być uzupełnione");
+        }
+        if (!inputText.isBlank()) {
+            result = CustomRC4.decrypt(inputText, rcPassword.getText());
+        } else if (Objects.nonNull(rcFile)){
+            try {
+                CustomDES.decrypt(rcFile, rcPassword.getText(), rcExtension.getValue());
+                result = "Plik zaszyfrowany";
+            } catch (Exception e) {
+                result = e.getMessage();
+            }
+        }
+        rcResult.setText(result);
+    }
+
+    public enum Operation {
         ENCRYPT, DECRYPT
     }
 }
