@@ -7,9 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.security.MessageDigest;
-import java.util.Arrays;
 import java.util.Base64;
 
 public class CustomDES {
